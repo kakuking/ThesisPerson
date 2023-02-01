@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Lights</title>
+</head>
+
+<script>
+    const ws = new WebSocket("ws://localhost:8000/ws/")
+    ws.onopen = function(){
+        console.log('hello world')
+        console.log(ws)
+    }
+
+    ws.onmessage = function(e){
+        console.log('new message!')
+        
+        message = JSON.parse(e.data)["message"]
+        console.log(message)
+        
+        //THis is for the map
+        try{
+            i = message["id"] - 1
+            li = document.getElementById("MapLight" + i)
+            if(message["isOn"]){
+                if(message["numberOfOkays"] == 0){
+                    li.style.fill = "yellow"
+                } else if(message["numberOfOkays"] < 0){
+                    li.style.fill = "red"
+                }
+            }else{
+                if(message["numberOfOkays"] == 0){
+                    li.style.fill = "black"
+                } else if(message["numberOfOkays"] < 0){
+                    li.style.fill = "red"
+                }
+            }
+        }
+        catch(e){}
+        
+        li = document.getElementById("TableLight" + message["id"])
+        if(li){
+            var cell = li.getElementsByTagName("td")
+
+            cell[0].innerHTML = message["id"];
+            cell[1].innerHTML = boolToUpperCase(message["isOn"])
+            st = ''
+            for (let i = 0; i < message["registeredUsers"].length; i++) {
+                st += "User " + message["registeredUsers"][i]["telegramChatID"] + ", "
+            }
+            cell[2].innerHTML = st
+            cell[3].innerHTML = message["luxLevel"]
+            cell[4].innerHTML = boolToUpperCase(message["overrideMotionSensor"])
+            cell[5].innerHTML = boolToUpperCase(message["motionDetected"])
+            cell[6].innerHTML = message["numberOfOkays"]
+            
+        }else{
+            var table = document.getElementById("LightTable");
+            var newRow = table.insertRow();
+            newRow.id = "TableLight" + message["id"]
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+            var cell4 = newRow.insertCell(4);
+            var cell5 = newRow.insertCell(5);
+            var cell6 = newRow.insertCell(6)
+
+            cell0.innerHTML = message["id"]
+            cell1.innerHTML = boolToUpperCase(message["isOn"])
+            cell2.innerHTML = message["registeredUsers"]
+            cell3.innerHTML = message["luxLevel"]
+            cell4.innerHTML = boolToUpperCase(message["overrideMotionSensor"])
+            cell5.innerHTML = boolToUpperCase(message["motionDetected"])
+            cell6.innerHTML = message["numberOfOkays"]
+        }
+        
+    }
+
+    function boolToUpperCase(inp){
+        if(inp){
+            return "True"
+        }else{
+            return "False"
+        }
+    }
+
+    function btnClick(){
+        ws.send("Hello Websocket");
+    }
+
+    function onLoad(){
+        {% for li in Lights %}
+            i = {{li.id}} - 1
+            l = document.getElementById("MapLight" + i)
+            if(l){
+                if("{{li.isOn}}" == "True"){
+                    if(parseInt("{{li.numberOfOkays}}") == 0){
+                        console.log("in here " + i)
+                        l.style.fill = "yellow"
+                    } else if(parseInt("{{li.numberOfOkays}}") < 0){
+                        l.style.fill = "red"
+                    }
+                }else{
+                    if(parseInt("{{li.numberOfOkays}}") == 0){
+                        l.style.fill = "black"
+                    } else if(parseInt("{{li.numberOfOkays}}") < 0){
+                        l.style.fill = "red"
+                    }
+                }
+            } 
+        {% endfor %}
+    } 
+</script>
+
+<style>
+    :root {
+        --background: #49C6E5;
+        --middletone: #54DEFD;
+        --lighttone: #FFFBFA;
+        --border: #00BD9D;
+        --accent: #8BD7D2;
+
+        --tableColor: rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: sans-serif;
+        display: grid;
+        grid-template-areas:
+          'header header'
+          'option1 option2'
+          'main main';
+        /*gap: 10px;*/
+
+        padding: 0px;
+        margin: 0px;
+
+        background-color: var(--background);
+    }
+
+
+    #BannerHead{
+        grid-area: header;
+        
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        
+        /*border-width: 0px 0px 3px 0px;
+        border-style: solid;
+        border-color: var(--middletone);
+        border-radius: 0px 0px 10px 10px;
+        
+        padding-left: 10px;*/
+        margin: 0px;
+        padding: 0px;
+        background-color: var(--middletone);
+    }
+
+    #option1{
+        grid-area: option1; 
+        border-right: 2px;
+        color: gray;
+    }
+
+    #option2{
+        grid-area: option2;  
+    }
+
+    .options{
+        text-decoration: none;
+        color: black;
+
+        border: var(--border) solid;
+        border-width: 2px 0px 0px 0px;
+
+        height: 40px;
+
+        padding: 0px;
+        margin: 0px;
+
+        background-color: var(--accent);
+
+          
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        transition: all 0.2s ease;
+    }
+
+    
+    .options:hover{
+        cursor: pointer;
+        transform: translate(0px, -4px);
+        box-shadow: 20px 20px 20px rgba(0,0,0,.5);
+    }
+
+
+    #theMap{
+        
+        border: 2px;
+        border-style: solid;
+        border-radius: 20px;
+
+        width: 99%;
+        height: auto;
+    }
+
+    table {
+        overflow-y: scroll; 
+        max-height: 25%; /*  5 x 20px per row*/
+        display: block;
+        width: 100%;
+        border: none;
+
+        background-color: var(--tableColor);
+    }
+    
+    td {
+        width: 100px;
+    }
+
+</style>
+
+<body onload="onLoad()">
+    <div id="BannerHead">
+        <h1>HELLO KAWAIII</h1>
+    </div>
+
+    <div class="options" id="option1">Home Page</div>
+    <a class="options" id="option2" href="/TelegramUsers">Users Directory</a>    
+    
+    <!-- The map -->
+    <div>
+        <svg id="theMap" width="1440" height="1024" viewBox="0 0 1440 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_1_3)">
+                <rect width="1440" height="1024" fill="white"/>
+                
+                <circle class="MapLight" id="MapLight0" cx="395" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                <circle class="MapLight" id="MapLight1" cx="511" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                <circle class="MapLight" id="MapLight2" cx="646" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                <circle class="MapLight" id="MapLight3" cx="781" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                <circle class="MapLight" id="MapLight4" cx="909" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                <circle class="MapLight" id="MapLight5" cx="1025" cy="424" r="22.5" fill="black" stroke="#9745FF" stroke-width="5"/>
+                
+                <path d="M-110 493H1484.5M324 -30V1057M1099 -30V1057" stroke="#FF993A" stroke-width="75"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_1_3">
+                <rect width="1440" height="1024" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+    </div>
+    
+    <!-- The Table -->
+    <table id="LightTable" border="black">
+        <thead>
+            <tr>
+                <th>Light ID</th>
+                <th>Is Light on</th>
+                <th>Light Registered Users</th>
+                <th>Light luminance</th>
+                <th>Override Motion Sensor</th>
+                <th>Motion Detected</th>
+                <th>Number of OKs</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for li in Lights%}
+            <tr id="TableLight{{li.id}}">
+                <td>{{li.id}}</td>
+                <td>{{li.isOn}}</td>
+                <td>
+                    {% for us in li.registeredUsers.all %}
+                    User {{us.telegramUserID}},
+                    {% endfor %}
+                </td>
+                <td>{{li.luxLevel}}</td>
+                <td>{{li.overrideMotionSensor}}</td>
+                <td>{{li.motionDetected}}</td>
+                <td>{{li.numberOfOkays}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+     
+    <!-- <button onclick="btnClick()">ClickMe</button> -->
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Lights</title>
+</head>
+<script>
+    const ws = new WebSocket("ws://localhost:8000/ws/TelegramUsers/")
+    ws.onopen = function(){
+        console.log('hello world')
+        console.log(ws)
+    }
+    ws.onmessage = function(e){
+        console.log('new message!' + e.data)
+        let message = JSON.parse(e.data)["message"]
+        let id = message["telegramUserID"]
+        str = ''
+        for(let i in message["Lights"]){
+            str += " Light " + message["Lights"][i] + ","
+        }
+        document.getElementById(id+"_Lights").innerHTML = str
+    }
+</script>
+
+<style>
+    :root {
+        --background: #49C6E5;
+        --middletone: #54DEFD;
+        --lighttone: #FFFBFA;
+        --border: #00BD9D;
+        --accent: #8BD7D2;
+
+        --tableColor: rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: sans-serif;
+        display: grid;
+        grid-template-areas:
+          'header header'
+          'option1 option2'
+          'main main';
+        /*gap: 10px;*/
+
+        padding: 0px;
+        margin: 0px;
+
+        background-color: var(--background);
+    }
+
+
+    #BannerHead{
+        grid-area: header;
+        
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        
+        /*border-width: 0px 0px 3px 0px;
+        border-style: solid;
+        border-color: var(--middletone);
+        border-radius: 0px 0px 10px 10px;
+        
+        padding-left: 10px;*/
+        margin: 0px;
+        padding: 0px;
+        background-color: var(--middletone);
+    }
+
+    #option1{
+        grid-area: option1; 
+        border-right: 2px;
+        
+    }
+
+    #option2{
+        grid-area: option2;  
+        color: gray;    
+    }
+
+    .options{
+        text-decoration: none;
+        color: black;
+
+        border: var(--border) solid;
+        border-width: 2px 0px 0px 0px;
+
+        height: 40px;
+
+        padding: 0px;
+        margin: 0px;
+
+        background-color: var(--accent);
+
+          
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        transition: all 0.2s ease;
+    }
+
+    
+    .options:hover{
+        cursor: pointer;
+        transform: translate(0px, -4px);
+        box-shadow: 20px 20px 20px rgba(0,0,0,.5);
+    }
+
+
+    table {
+        overflow-y: scroll; 
+        /*max-height: 25%; /*  5 x 20px per row*/
+        display: block;
+        width: 100%;
+        border: none;
+        grid-column: span 2;
+
+        background-color: var(--tableColor);
+    }
+    
+    td {
+        width: auto;
+    }
+
+</style>
+
+<body>
+    <div id="BannerHead">
+        <h1>HELLO KAWAIII</h1>
+    </div>
+
+    <a class="options" id="option1" href="/">Home Page</a>
+    <div class="options" id="option2" href="/TelegramUsers">Users Directory</div>    
+    
+    <!-- <a href="/">Go back :(</a> -->
+    <table border="black">
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Registered Lights</th>
+        </tr>
+        {% for user in TelegramUsers %}
+            <tr>
+                <td id="{{user.telegramUserID}}_UserID">{{user.telegramUserID}}</td>
+                <td id="{{user.telegramUserID}}_Username">{{user.telegramUsername}}</td>
+                <td id="{{user.telegramUserID}}_Lights">
+                    {% for li in user.light_set.all %}
+                     Light {{li.id}},
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
