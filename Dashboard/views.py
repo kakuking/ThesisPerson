@@ -50,7 +50,9 @@ def AWSUpdate(request):
 def updateOverride(request):
     data = json.loads(request.body)
     print(data)
-    print("updateOveride")
+    li = Light.objects.get(pk = data['lightID'])
+    li.overrideMotionSensor = True if data['newOver'] == 'True' else False
+    li.save()
 
     return HttpResponse(status=200)
 
