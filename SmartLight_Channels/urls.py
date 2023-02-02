@@ -23,6 +23,6 @@ urlpatterns = [
 
     path('TelegramUsers/', views.usersPage),
 
-    path('TestAWS/', views.confirm_url_AWS),
+    path('TestAWS/', views.AWSUpdate),
     path('TestAWS/message/', views.AWSTrial),
 ]

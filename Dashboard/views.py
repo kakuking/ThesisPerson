@@ -30,15 +30,12 @@ def AWSTrial(request):
     return HttpResponse(status=201)
 
 @csrf_exempt
-def confirm_url_AWS(request):
-    print("helloooooo")
+def AWSUpdate(request):
     print(request.POST)
-    # Extract the required headers and payload from the request
-    confirmation_token = request.headers.get("aws-iot-http-token")
-    challenge_response = {"aws-iot-http-token-response": confirmation_token}
-
+    lightID = request.POST['lightID']
+    isOn = request.POST['isOn']
     # Return the headers and payload as the response
-    return HttpResponse(challenge_response, content_type="application/json", status=200)
+    return HttpResponse(status=200)
 
 #LIght indices
 def getLightIndexRange(request):
