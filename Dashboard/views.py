@@ -35,7 +35,7 @@ def AWSUpdate(request):
     print(data)
     lightID = data['lightID']
     isOn = data['isOn']
-
+    print(lightID + " " + isOn)
     # light = get_object_or_404(Light, lightID)
     # isOn = False if request.POST['isOn'] == 'False' else True
     # light.isOn = isOn
