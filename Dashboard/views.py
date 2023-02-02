@@ -10,6 +10,8 @@ from django.core import serializers
 from .serializers import LightSerializer
 from .models import Light, TelegramUser
 
+import boto3
+
 # Create your views here.
 def index(request):
     lights = Light.objects.all()
@@ -54,6 +56,21 @@ def updateOverride(request):
     li.overrideMotionSensor = True if data['newOver'] == 'True' else False
     li.save()
 
+    client = boto3.client('iot-data',
+                      aws_access_key_id='AKIAVB7OZYMWU5TOJG5S',
+                      aws_secret_access_key='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',
+                      region_name='ap-south-1')
+
+    payload = {
+        'lightID': data['lightID'],
+        'overrideMotionSensor': li.overrideMotionSensor
+    }
+
+    response = client.publish(
+        topic='Test',
+        payload=json.dumps(payload),
+        qos=1
+    )
     return HttpResponse(status=200)
 
 
