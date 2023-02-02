@@ -53,7 +53,7 @@
             cell[2].innerHTML = st
             cell[3].innerHTML = message["luxLevel"]
             cell[4].innerHTML = boolToUpperCase(message["overrideMotionSensor"])
-            cell[5].innerHTML = boolToUpperCase(message["motionDetected"])
+            /*cell[5].innerHTML = boolToUpperCase(message["motionDetected"])*/
             cell[6].innerHTML = message["numberOfOkays"]
             
         }else{
@@ -65,7 +65,7 @@
             var cell2 = newRow.insertCell(2);
             var cell3 = newRow.insertCell(3);
             var cell4 = newRow.insertCell(4);
-            var cell5 = newRow.insertCell(5);
+            /*var cell5 = newRow.insertCell(5);*/
             var cell6 = newRow.insertCell(6)
 
             cell0.innerHTML = message["id"]
@@ -73,7 +73,7 @@
             cell2.innerHTML = message["registeredUsers"]
             cell3.innerHTML = message["luxLevel"]
             cell4.innerHTML = boolToUpperCase(message["overrideMotionSensor"])
-            cell5.innerHTML = boolToUpperCase(message["motionDetected"])
+            /*cell5.innerHTML = boolToUpperCase(message["motionDetected"])*/
             cell6.innerHTML = message["numberOfOkays"]
         }
         
@@ -282,7 +282,7 @@
                 </td>
                 <td>{{li.luxLevel}}</td>
                 <td>{{li.overrideMotionSensor}}</td>
-                <td>{{li.motionDetected}}</td>
+                <!-- <td>{{li.motionDetected}}</td> -->
                 <td>{{li.numberOfOkays}}</td>
             </tr>
             {% endfor %}
