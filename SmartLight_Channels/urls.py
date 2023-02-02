@@ -13,6 +13,7 @@ urlpatterns = [
     path('lights/<int:pk>/delete/', views.LightDelete),
     path('lights/getIndexRange', views.getLightIndexRange),
     path('lights/<int:pk>/isOk', views.incLightIsOK),
+    path('lights/updateOverride/', views.updateOverride),
 
     path('user/registerLights', views.registerLights),
     path('user/deregisterLights', views.deregisterLights),

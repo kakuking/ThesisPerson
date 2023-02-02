@@ -46,6 +46,13 @@ def AWSUpdate(request):
     # Return the headers and payload as the response
     return HttpResponse(status=200)
 
+@csrf_exempt
+def updateOverride(request):
+    print(request.POST)
+
+    return HttpResponse(status=200)
+
+
 #LIght indices
 def getLightIndexRange(request):
     if request.method == 'GET':
