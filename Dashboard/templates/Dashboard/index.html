@@ -55,7 +55,7 @@
             let ov = boolToUpperCase(message["overrideMotionSensor"])
             cell[4].innerHTML = `<button id="ovrBtnFor` + message["id"] + `" onclick="changeOverride(` + message["id"] + `, ` + ov + `)">` + ov + `</button>`
             /*cell[5].innerHTML = boolToUpperCase(message["motionDetected"])*/
-            cell[6].innerHTML = message["numberOfOkays"]
+            cell[5].innerHTML = message["numberOfOkays"]
             
         }else{
             var table = document.getElementById("LightTable");
@@ -67,7 +67,7 @@
             var cell3 = newRow.insertCell(3);
             var cell4 = newRow.insertCell(4);
             /*var cell5 = newRow.insertCell(5);*/
-            var cell6 = newRow.insertCell(6)
+            var cell5 = newRow.insertCell(5)
 
             cell0.innerHTML = message["id"]
             cell1.innerHTML = boolToUpperCase(message["isOn"])
@@ -75,7 +75,7 @@
             cell3.innerHTML = message["luxLevel"]
             cell4.innerHTML = `<button id="ovrBtnFor` + message["id"] + `" onclick="changeOverride(` + message["id"] + `, ` + boolToUpperCase(message["overrideMotionSensor"]) + `)">` + boolToUpperCase(message["overrideMotionSensor"]) `</button>`
             /*cell5.innerHTML = boolToUpperCase(message["motionDetected"])*/
-            cell6.innerHTML = message["numberOfOkays"]
+            cell5.innerHTML = message["numberOfOkays"]
         }
         
     }
