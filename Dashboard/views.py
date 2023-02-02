@@ -50,6 +50,7 @@ def AWSUpdate(request):
 def updateOverride(request):
     data = request.POST.get("data")
     print(data)
+    print("updateOveride")
 
     return HttpResponse(status=200)
 
