@@ -52,7 +52,8 @@
             }
             cell[2].innerHTML = st
             cell[3].innerHTML = message["luxLevel"]
-            cell[4].innerHTML = `<button id="ovrBtnFor` + message["id"] + `" onclick="changeOverride(` + message["id"] + `, ` + boolToUpperCase(message["overrideMotionSensor"]) + `)">` + boolToUpperCase(message["overrideMotionSensor"]) `</button>`
+            let ov = boolToUpperCase(message["overrideMotionSensor"])
+            cell[4].innerHTML = `<button id="ovrBtnFor` + message["id"] + `" onclick="changeOverride(` + message["id"] + `, ` + ov + `)">` + ov + `</button>`
             /*cell[5].innerHTML = boolToUpperCase(message["motionDetected"])*/
             cell[6].innerHTML = message["numberOfOkays"]
             
