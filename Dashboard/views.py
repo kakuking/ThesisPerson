@@ -48,7 +48,7 @@ def AWSUpdate(request):
 
 @csrf_exempt
 def updateOverride(request):
-    data = request.POST.get("data")
+    data = request.POST
     print(data)
     print("updateOveride")
 
