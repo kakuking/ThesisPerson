@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-x7#t)xq6p6l6*+3l#8a!^m*gd&ks6%%tq!as9oe)twt&32c&^2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['validity-premiere-kay-sufficient.trycloudflare.com']
+ALLOWED_HOSTS = ['validity-premiere-kay-sufficient.trycloudflare.com', '13.126.134.48']
 
 
 # Application definition
