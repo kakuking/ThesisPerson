@@ -32,7 +32,7 @@ def AWSTrial(request):
 @csrf_exempt
 def confirm_url_AWS(request):
     print("helloooooo")
-    print(request)
+    print(request.POST)
     # Extract the required headers and payload from the request
     confirmation_token = request.headers.get("aws-iot-http-token")
     challenge_response = {"aws-iot-http-token-response": confirmation_token}
