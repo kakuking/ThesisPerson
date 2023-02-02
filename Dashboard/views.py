@@ -41,7 +41,7 @@ def AWSUpdate(request):
 
     li = Light.objects.get(pk = lightID)
     li.isOn = isOn
-    li.save()
+    li.save(update_fields=['isOn'])
     print(li)
     # light.save(update_fields=['isOn'])
     
