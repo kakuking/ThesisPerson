@@ -31,9 +31,10 @@ def AWSTrial(request):
 
 @csrf_exempt
 def AWSUpdate(request):
-    print(request.POST)
-    lightID = request.POST['lightID']
-    isOn = request.POST['isOn']
+    data = request.POST
+    print(data)
+    lightID = data['lightID']
+    isOn = data['isOn']
 
     light = get_object_or_404(Light, lightID)
     isOn = False if request.POST['isOn'] == 'False' else True
