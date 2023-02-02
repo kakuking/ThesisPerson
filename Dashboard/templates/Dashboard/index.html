@@ -107,7 +107,9 @@
                 console.log(xhr.responseText);
             }
         };
-        xhr.send(JSON.stringify({ data: "some data" }));
+        dat = { data: "some data" };
+        console.log(dat);
+        xhr.send(JSON.stringify(dat));
 
     }
 
