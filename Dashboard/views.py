@@ -67,7 +67,7 @@ def updateOverride(request):
     }
 
     response = client.publish(
-        topic='Test',
+        topic='lightUpdate',
         payload=json.dumps(payload),
         qos=1
     )
