@@ -35,7 +35,7 @@ def AWSUpdate(request):
     print(data)
     lightID = data['lightID']
     isOn = False if data['isOn'] == 'False' else True
-    print(lightID + " " + isOn)
+    print(f"{lightID} and {isOn} ")
 
     li = Light.objects.get(pk = lightID)
     print(li)
