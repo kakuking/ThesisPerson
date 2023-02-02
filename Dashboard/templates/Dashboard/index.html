@@ -8,7 +8,7 @@
 </head>
 
 <script>
-    const ws = new WebSocket("ws://localhost:8000/ws/")
+    const ws = new WebSocket("ws://ec2-13-126-134-48.ap-south-1.compute.amazonaws.com:8000/ws/")
     ws.onopen = function(){
         console.log('hello world')
         console.log(ws)
