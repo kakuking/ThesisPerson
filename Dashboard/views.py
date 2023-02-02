@@ -34,11 +34,11 @@ def AWSUpdate(request):
     data = request.POST
     print(data)
     lightID = data['lightID']
-    isOn = data['isOn']
+    isOn = False if data['isOn'] == 'False' else True
     print(lightID + " " + isOn)
-    # light = get_object_or_404(Light, lightID)
-    # isOn = False if request.POST['isOn'] == 'False' else True
-    # light.isOn = isOn
+
+    li = Light.objects.get(pk = lightID)
+    print(li)
     # light.save(update_fields=['isOn'])
     
     # Return the headers and payload as the response
