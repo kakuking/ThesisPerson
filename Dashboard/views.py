@@ -37,12 +37,17 @@ def AWSUpdate(request):
     print(data)
     lightID = data['lightID']
     isOn = False if data['isOn'] == 'False' else True
-    print(f"{lightID} and {isOn} ")
+    luxLevel = data['luxLevel']
 
     li = Light.objects.get(pk = lightID)
-    li.isOn = isOn
-    li.save(update_fields=['isOn'])
-    print(li)
+
+    if li.isOn == isOn:
+        li.luxLevel = int(luxLevel)
+        li.save(update_fields=['luxLevel'])
+    else:
+        li.isOn = isOn
+        li.luxLevel = int(luxLevel)
+        li.save(update_fields=['isOn', 'luxLevel'])
     # light.save(update_fields=['isOn'])
     
     # Return the headers and payload as the response
