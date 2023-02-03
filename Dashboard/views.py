@@ -83,7 +83,7 @@ def AWSUpdate(request):
 
         payload = {
             'lightID': lig.id,
-            'isOn': lig.isOn
+            'isOn': str(lig.isOn)
         }
 
         response = client.publish(
@@ -110,7 +110,7 @@ def turnItOff(liID, liLeftID, liRightID):
 
         payload = {
             'lightID': li.id,
-            'isOn': li.isOn
+            'isOn': str(li.isOn)
         }
 
         response = client.publish(
