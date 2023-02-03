@@ -37,17 +37,22 @@ def AWSUpdate(request):
     data = request.POST
     print(data)
     lightID = data['lightID']
+    motionDetected = False if data['motionDetected'] == 'False' else True
     # isOn = False if data['isOn'] == 'False' else True
     luxLevel = data['luxLevel']
 
     li = Light.objects.get(pk = lightID)
     li.luxLevel = int(luxLevel)
+    li.motionDetected = motionDetected
 
     if int(luxLevel) < 20:
-        li.isOn = True
-        li.save(update_fields=['isOn', 'luxLevel'])
+        if li.motionDetected or li.overrideMotionSensor:
+            li.isOn = True
+            li.save(update_fields=['isOn', 'luxLevel', 'motionDetected'])
+        else:
+            li.save(update_fields=['luxLevel', 'motionDetected'])
     else:
-        li.save(update_fields=['luxLevel'])
+            li.save(update_fields=['luxLevel', 'motionDetected'])
     # light.save(update_fields=['isOn'])
     
     client = boto3.client('iot-data',
