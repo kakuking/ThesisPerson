@@ -1,4 +1,5 @@
 import json
+from threading import Timer
 from datetime import time
 
 from django.shortcuts import get_object_or_404
@@ -36,22 +37,45 @@ def AWSUpdate(request):
     data = request.POST
     print(data)
     lightID = data['lightID']
-    isOn = False if data['isOn'] == 'False' else True
+    # isOn = False if data['isOn'] == 'False' else True
     luxLevel = data['luxLevel']
 
     li = Light.objects.get(pk = lightID)
+    li.luxLevel = int(luxLevel)
 
-    if li.isOn == isOn:
-        li.luxLevel = int(luxLevel)
-        li.save(update_fields=['luxLevel'])
-    else:
-        li.isOn = isOn
-        li.luxLevel = int(luxLevel)
+    if int(luxLevel) < 20:
+        li.isOn = True
         li.save(update_fields=['isOn', 'luxLevel'])
+    else:
+        li.save(update_fields=['luxLevel'])
     # light.save(update_fields=['isOn'])
     
+    client = boto3.client('iot-data',
+                      aws_access_key_id='AKIAVB7OZYMWU5TOJG5S',
+                      aws_secret_access_key='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',
+                      region_name='ap-south-1')
+
+    payload = {
+        'lightID': data['lightID'],
+        'isOn': li.isOn
+    }
+
+    response = client.publish(
+        topic='lightUpdate',
+        payload=json.dumps(payload),
+        qos=1
+    )
+    
+    t = Timer(10, turnItOff, args=[data['lightID']])
+    t.start()
+
     # Return the headers and payload as the response
     return HttpResponse(status=200)
+
+def turnItOff(liId):
+    li = Light.objects.get(pk=liId)
+    li.isOn = False
+    li.save(update_fields=['isOn'])
 
 @csrf_exempt
 def updateOverride(request):
@@ -60,22 +84,6 @@ def updateOverride(request):
     li = Light.objects.get(pk = data['lightID'])
     li.overrideMotionSensor = True if data['newOver'] == 'True' else False
     li.save()
-
-    client = boto3.client('iot-data',
-                      aws_access_key_id='AKIAVB7OZYMWU5TOJG5S',
-                      aws_secret_access_key='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',
-                      region_name='ap-south-1')
-
-    payload = {
-        'lightID': data['lightID'],
-        'overrideMotionSensor': li.overrideMotionSensor
-    }
-
-    response = client.publish(
-        topic='lightUpdate',
-        payload=json.dumps(payload),
-        qos=1
-    )
     return HttpResponse(status=200)
 
 
