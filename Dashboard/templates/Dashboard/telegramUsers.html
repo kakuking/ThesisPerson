@@ -142,6 +142,8 @@
             <th>User ID</th>
             <th>Username</th>
             <th>Registered Lights</th>
+            <th>Notification Start Time</th>
+            <th>Notification End Time</th>
         </tr>
         {% for user in TelegramUsers %}
             <tr>
@@ -152,6 +154,8 @@
                      Light {{li.id}},
                     {% endfor %}
                 </td>
+                <td id="{{user.telegramUserID}}_notifStartTime">{{user.notificationStartTime}}</td>
+                <td id="{{user.telegramUserID}}_notifEndTime">{{user.notificationEndTime}}</td>
             </tr>
         {% endfor %}
     </table>
