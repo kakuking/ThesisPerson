@@ -99,8 +99,9 @@ def LightPostSave(sender, instance, update_fields, created, **kwargs):
     if(update_fields):
         if 'isOn' in update_fields and instance.isOn == True and not created:
             for us in instance.registeredUsers.all():
-                instance.numberOfOkays -= 1
-                telegramNotifMessage(us, instance.id)
+                if (us.notificationStartTime <= datetime.now(tz=pytz.timezone('CET')).time() <= us.notificationEndTime):
+                    instance.numberOfOkays -= 1
+                    telegramNotifMessage(us, instance.id)
             instance.save()
         # if 'numberOfOkays' in update_fields:
 
@@ -130,12 +131,11 @@ def UsersM2MChange(sender, instance, action, pk_set, **kwargs):
 
 def telegramNotifMessage(user, lightID):
     # print(f"{user.notificationStartTime} + {datetime.now(tz=pytz.timezone('CET')).time()} + {user.notificationEndTime}")
-    if (user.notificationStartTime <= datetime.now(tz=pytz.timezone('CET')).time() <= user.notificationEndTime):
-        bot_token = '5915070249:AAHlS7DlWv7c7QGco08Gr_S9NB1kRWbkqkA'    
-        bot = telegram.Bot(token=bot_token)
-        stopItButton = InlineKeyboardButton('Stop the notification', callback_data='stopNotfication')
-        callPoliceButton = InlineKeyboardButton('Call the police', callback_data='callPolice')
-        keyboard = [[stopItButton, callPoliceButton]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+    bot_token = '5915070249:AAHlS7DlWv7c7QGco08Gr_S9NB1kRWbkqkA'    
+    bot = telegram.Bot(token=bot_token)
+    stopItButton = InlineKeyboardButton('Stop the notification', callback_data='stopNotfication')
+    callPoliceButton = InlineKeyboardButton('Call the police', callback_data='callPolice')
+    keyboard = [[stopItButton, callPoliceButton]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-        bot.send_message(chat_id=user.telegramChatID, text=f'Your registered light, Light {lightID} was triggered between your specified times :', reply_markup=reply_markup)
+    bot.send_message(chat_id=user.telegramChatID, text=f'Your registered light, Light {lightID} was triggered between your specified times :', reply_markup=reply_markup)
