@@ -66,7 +66,7 @@ def AWSUpdate(request):
         qos=1
     )
     
-    t = Timer(10, turnItOff, args=[data['lightID']])
+    t = Timer(30, turnItOff, args=[data['lightID']])
     t.start()
 
     # Return the headers and payload as the response
@@ -76,6 +76,22 @@ def turnItOff(liId):
     li = Light.objects.get(pk=liId)
     li.isOn = False
     li.save(update_fields=['isOn'])
+
+    client = boto3.client('iot-data',
+                      aws_access_key_id='AKIAVB7OZYMWU5TOJG5S',
+                      aws_secret_access_key='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',
+                      region_name='ap-south-1')
+
+    payload = {
+        'lightID': liId,
+        'isOn': li.isOn
+    }
+
+    response = client.publish(
+        topic='lightUpdate',
+        payload=json.dumps(payload),
+        qos=1
+    )
 
 @csrf_exempt
 def updateOverride(request):
