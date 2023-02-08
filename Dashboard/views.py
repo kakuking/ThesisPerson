@@ -42,7 +42,7 @@ def AWSUpdate(request):
     luxLevel = data['luxLevel']
 
     li = Light.objects.get(pk = lightID)
-    li.luxLevel = int(luxLevel)
+    li.luxLevel = float(luxLevel)
     li.motionDetected = motionDetected
 
     l = [li]
