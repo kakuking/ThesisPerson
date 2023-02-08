@@ -47,7 +47,7 @@ def AWSUpdate(request):
 
     l = [li]
 
-    if int(luxLevel) < 20:
+    if double(luxLevel) < 20:
         if li.motionDetected or li.overrideMotionSensor:
             li.isOn = True
             
