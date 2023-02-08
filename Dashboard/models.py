@@ -16,7 +16,7 @@ class Light(models.Model):
     isOn = models.BooleanField(default=False)
     registeredUsers = models.ManyToManyField(TelegramUser)
     motionDetected = models.BooleanField(default=False)
-    luxLevel = models.IntegerField(default=0)
+    luxLevel = models.FloatField(default=0)
     overrideMotionSensor = models.BooleanField(default=False)
     numberOfOkays = models.IntegerField(default=0)
 
